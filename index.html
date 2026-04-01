@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a09">
+<title>My Operating System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-eyebrow">Operating System</div>
+      <div class="sidebar-logo-name">All in.<br>Every day.</div>
+    </div>
+
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-section">
+      <button class="nav-item active" data-nav="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">◈</span> Dashboard
+      </button>
+      <button class="nav-item" data-nav="weekly" onclick="navigate('weekly')">
+        <span class="nav-icon">◷</span> Weekly OS
+      </button>
+    </div>
+
+    <div class="nav-section-label">Log & Track</div>
+    <div class="nav-section">
+      <button class="nav-item" data-nav="outreach" onclick="navigate('outreach')">
+        <span class="nav-icon">◎</span> Outreach
+      </button>
+      <button class="nav-item" data-nav="income" onclick="navigate('income')">
+        <span class="nav-icon">◇</span> Finance
+      </button>
+      <button class="nav-item" data-nav="lectures" onclick="navigate('lectures')">
+        <span class="nav-icon">◈</span> Lectures
+      </button>
+      <button class="nav-item" data-nav="content" onclick="navigate('content')">
+        <span class="nav-icon">◉</span> Content
+      </button>
+      <button class="nav-item" data-nav="daily" onclick="navigate('daily')">
+        <span class="nav-icon">◐</span> Daily Log
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sync-status">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel">Syncing…</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="hamburger" id="hamburger">☰</button>
+        <span class="topbar-title" id="topbar-title">Dashboard</span>
+      </div>
+      <span class="topbar-date" id="topbar-date"></span>
+    </div>
+
+    <div class="page-content">
+
+      <!-- ══════════ DASHBOARD ══════════ -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="loading" id="dash-loading">Loading your data…</div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Income this month</div>
+            <div class="metric-value" id="d-income">—</div>
+            <div class="metric-sub" id="income-pct">— of ₦3M target</div>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="income-bar" style="width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Outreach sent</div>
+            <div class="metric-value" id="d-outreach">—</div>
+            <div class="metric-sub">This month</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Latest lecture</div>
+            <div class="metric-value" id="d-attendees">—</div>
+            <div class="metric-sub" id="att-pct">attendees</div>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="att-bar" style="width:0%;background:var(--teal)"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Content published</div>
+            <div class="metric-value" id="d-content">—</div>
+            <div class="metric-sub">Pieces this month</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:1rem">
+          <div class="card">
+            <div class="section-hd">
+              <div>
+                <div class="section-title">Income breakdown</div>
+                <div class="section-sub">This month by source</div>
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="openModal('income-modal')">+ Log income</button>
+            </div>
+            <div id="income-breakdown"><div class="loading">Loading…</div></div>
+          </div>
+          <div class="card">
+            <div class="section-hd">
+              <div>
+                <div class="section-title">Win rate</div>
+                <div class="section-sub">Daily wins this month</div>
+              </div>
+              <button class="btn btn-sm" onclick="openModal('daily-modal')">+ Log day</button>
+            </div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);margin:0.5rem 0" id="d-winrate">—</div>
+            <div class="metric-bar-wrap" style="margin-top:0"><div class="metric-bar" style="background:var(--teal);width:0%" id="winrate-bar-dash"></div></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Days you hit your daily win condition</div>
+          </div>
+        </div>
+
+        <!-- Quick log strip -->
+        <div class="card" style="margin-bottom:1rem">
+          <div class="section-title" style="margin-bottom:1rem">Quick log</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-gold" onclick="openModal('outreach-modal')">+ Outreach</button>
+            <button class="btn btn-gold" onclick="openModal('income-modal')">+ Income</button>
+            <button class="btn btn-gold" onclick="openModal('lecture-modal')">+ Lecture</button>
+            <button class="btn btn-gold" onclick="openModal('content-modal')">+ Content</button>
+            <button class="btn btn-gold" onclick="openModal('daily-modal')">+ Daily win</button>
+          </div>
+        </div>
+
+        <!-- Big goals -->
+        <div class="card">
+          <div class="section-title" style="margin-bottom:1.2rem">October 2025 goals</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span style="color:var(--text)">Move to Gbagada / Yaba — ₦8M rent</span>
+                <span style="color:var(--text-muted)">Oct 2025</span>
+              </div>
+              <div class="metric-bar-wrap"><div class="metric-bar" style="width:5%;background:var(--purple)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span style="color:var(--text)">Consistent ₦3M / month income</span>
+                <span style="color:var(--text-muted)" id="d-income-pct2">0%</span>
+              </div>
+              <div class="metric-bar-wrap"><div class="metric-bar" id="income-bar2" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span style="color:var(--text)">50 lecture participants — May</span>
+                <span style="color:var(--text-muted)" id="d-att-pct2">0 / 50</span>
+              </div>
+              <div class="metric-bar-wrap"><div class="metric-bar" id="att-bar2" style="width:0%;background:var(--teal)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                <span style="color:var(--text)">Own a physical facility</span>
+                <span style="color:var(--text-muted)">Vision locked ✓</span>
+              </div>
+              <div class="metric-bar-wrap"><div class="metric-bar" style="width:2%;background:var(--coral)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ WEEKLY OS ══════════ -->
+      <div class="panel" id="panel-weekly">
+        <div class="section-hd" style="margin-bottom:0.5rem">
+          <div>
+            <div class="section-title">Your week, theme by theme</div>
+            <div class="section-sub">Click a day. Know exactly what to do.</div>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openModal('daily-modal')">+ Score today</button>
+        </div>
+        <hr>
+        <div class="week-grid" id="os-week-grid"></div>
+        <div class="detail-box" id="os-detail"></div>
+      </div>
+
+      <!-- ══════════ OUTREACH ══════════ -->
+      <div class="panel" id="panel-outreach">
+        <div class="loading" id="outreach-loading">Loading…</div>
+        <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="metric-card">
+            <div class="metric-label">This month</div>
+            <div class="metric-value" id="o-month">—</div>
+            <div class="metric-sub">People reached out to</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">All time</div>
+            <div class="metric-value" id="o-total">—</div>
+            <div class="metric-sub">Total outreach logged</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Converted</div>
+            <div class="metric-value" id="o-converted">—</div>
+            <div class="metric-sub">Registered or converted</div>
+          </div>
+        </div>
+        <div class="section-hd">
+          <div class="section-title">Outreach log</div>
+          <button class="btn btn-gold" onclick="openModal('outreach-modal')">+ Log outreach</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Date</th><th>Name</th><th>Channel</th><th>Purpose</th><th>Outcome</th><th>Notes</th>
+              </tr></thead>
+              <tbody id="outreach-tbody"><tr><td colspan="6"><div class="loading">Loading…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ INCOME ══════════ -->
+      <div class="panel" id="panel-income">
+        <div class="loading" id="income-loading">Loading…</div>
+        <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="metric-card">
+            <div class="metric-label">This month</div>
+            <div class="metric-value" id="inc-month">—</div>
+            <div class="metric-sub" id="inc-target-pct">— of ₦3M</div>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="inc-bar-fill" style="width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">All time</div>
+            <div class="metric-value" id="inc-total">—</div>
+            <div class="metric-sub">Total logged</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Monthly target</div>
+            <div class="metric-value">₦3M</div>
+            <div class="metric-sub">Needed for apartment + life</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:1rem">
+          <div class="card">
+            <div class="section-hd" style="margin-bottom:1rem">
+              <div class="section-title">By source — this month</div>
+            </div>
+            <div id="inc-breakdown-full"></div>
+          </div>
+          <div class="card">
+            <div class="section-hd" style="margin-bottom:1rem">
+              <div class="section-title">6-month trend</div>
+            </div>
+            <div id="income-trend-chart"></div>
+          </div>
+        </div>
+
+        <div class="section-hd">
+          <div class="section-title">All transactions</div>
+          <button class="btn btn-gold" onclick="openModal('income-modal')">+ Log income</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Amount</th><th>Source</th><th>Description</th><th>Status</th></tr></thead>
+              <tbody id="income-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ LECTURES ══════════ -->
+      <div class="panel" id="panel-lectures">
+        <div class="loading" id="lectures-loading">Loading…</div>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Total lectures</div>
+            <div class="metric-value" id="lec-count">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Latest attendance</div>
+            <div class="metric-value" id="lec-latest">—</div>
+            <div class="metric-sub" id="lec-goal-pct">—/50 May goal</div>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="lec-goal-bar" style="width:0%;background:var(--teal)"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Total attendees</div>
+            <div class="metric-value" id="lec-attendees">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Total referrals</div>
+            <div class="metric-value" id="lec-referrals">—</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:1rem">
+          <div class="section-title" style="margin-bottom:1rem">Attendance growth</div>
+          <div id="lec-chart"><div class="loading">Loading…</div></div>
+        </div>
+
+        <div class="section-hd">
+          <div class="section-title">Lecture history</div>
+          <button class="btn btn-gold" onclick="openModal('lecture-modal')">+ Log lecture</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Event</th><th>Attendees</th><th>Referrals</th><th>Revenue</th><th>Topic</th></tr></thead>
+              <tbody id="lectures-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ CONTENT ══════════ -->
+      <div class="panel" id="panel-content">
+        <div class="loading" id="content-loading">Loading…</div>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Published this month</div>
+            <div class="metric-value" id="con-month">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Clips this month</div>
+            <div class="metric-value" id="con-clips">—</div>
+            <div class="metric-sub" id="con-clip-pct">—/10 lecture target</div>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="con-clip-bar" style="width:0%;background:var(--teal)"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Essays / newsletters</div>
+            <div class="metric-value" id="con-essays">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">All time</div>
+            <div class="metric-value" id="con-total">—</div>
+          </div>
+        </div>
+
+        <div class="section-hd">
+          <div class="section-title">Content log</div>
+          <button class="btn btn-gold" onclick="openModal('content-modal')">+ Log content</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Type</th><th>Title</th><th>Platform</th><th>Lecture ref</th><th>Status</th></tr></thead>
+              <tbody id="content-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ DAILY LOG ══════════ -->
+      <div class="panel" id="panel-daily">
+        <div class="loading" id="daily-loading">Loading…</div>
+        <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="metric-card">
+            <div class="metric-label">Days logged</div>
+            <div class="metric-value" id="dl-days">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Total wins</div>
+            <div class="metric-value" id="dl-wins">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Win rate</div>
+            <div class="metric-value" id="dl-rate">—</div>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="dl-rate-bar" style="width:0%;background:var(--teal)"></div></div>
+          </div>
+        </div>
+        <div class="section-hd">
+          <div class="section-title">Daily log history</div>
+          <button class="btn btn-gold" onclick="openModal('daily-modal')">+ Score today</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Day</th><th>Win?</th><th>Score</th><th>Notes</th></tr></thead>
+              <tbody id="daily-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </main>
+</div><!-- /shell -->
+
+<!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+<!-- Outreach modal -->
+<div class="modal-backdrop" id="outreach-modal" onclick="if(event.target===this)closeModal('outreach-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Log outreach</span>
+      <button class="modal-close" onclick="closeModal('outreach-modal')">×</button>
+    </div>
+    <form id="outreach-form" onsubmit="event.preventDefault();submitOutreach()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" name="date">
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" placeholder="Who did you reach out to?">
+        </div>
+        <div class="form-group">
+          <label>Channel</label>
+          <select name="channel">
+            <option value="">Select channel…</option>
+            <option>WhatsApp</option><option>Instagram DM</option><option>LinkedIn</option>
+            <option>Email</option><option>Phone</option><option>In-person</option><option>Twitter/X</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Purpose</label>
+          <select name="purpose">
+            <option value="">Select purpose…</option>
+            <option>Lecture invite</option><option>GeniusProof inquiry</option>
+            <option>Advisory pitch</option><option>Speaking pitch</option>
+            <option>Book sale</option><option>General follow-up</option><option>Referral ask</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Outcome</label>
+          <select name="outcome">
+            <option value="">Select outcome…</option>
+            <option>Interested</option><option>Registered</option><option>Converted</option>
+            <option>Not interested</option><option>No response</option><option>Follow-up scheduled</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Follow-up date</label>
+          <input type="date" name="followup">
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <textarea name="notes" placeholder="What was the conversation about? Any context…"></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeModal('outreach-modal')">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="outreach-submit">Log outreach</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Income modal -->
+<div class="modal-backdrop" id="income-modal" onclick="if(event.target===this)closeModal('income-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Log income</span>
+      <button class="modal-close" onclick="closeModal('income-modal')">×</button>
+    </div>
+    <form id="income-form" onsubmit="event.preventDefault();submitIncome()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" name="date">
+        </div>
+        <div class="form-group">
+          <label>Amount (₦)</label>
+          <input type="number" name="amount" placeholder="e.g. 150000">
+        </div>
+        <div class="form-group full">
+          <label>Source</label>
+          <select name="source">
+            <option value="">Select source…</option>
+            <option>Monthly Lecture</option>
+            <option>GeniusProof Lab</option>
+            <option>Book Sales</option>
+            <option>Advisory Services</option>
+            <option>Speaking Engagements</option>
+            <option>Ministry / Donations</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <input type="text" name="description" placeholder="What was this for?">
+        </div>
+        <div class="form-group">
+          <label>Payment method</label>
+          <select name="payment">
+            <option value="">Select…</option>
+            <option>Bank transfer</option><option>Cash</option><option>Paystack</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select name="status">
+            <option>Received</option><option>Pending</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeModal('income-modal')">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="income-submit">Log income</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Lecture modal -->
+<div class="modal-backdrop" id="lecture-modal" onclick="if(event.target===this)closeModal('lecture-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Log lecture</span>
+      <button class="modal-close" onclick="closeModal('lecture-modal')">×</button>
+    </div>
+    <form id="lecture-form" onsubmit="event.preventDefault();submitLecture()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" name="date">
+        </div>
+        <div class="form-group">
+          <label>Event name</label>
+          <input type="text" name="eventname" placeholder="e.g. April Monthly Lecture">
+        </div>
+        <div class="form-group">
+          <label>Attendees</label>
+          <input type="number" name="attendees" placeholder="How many showed up?">
+        </div>
+        <div class="form-group">
+          <label>Referrals generated</label>
+          <input type="number" name="referrals" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Revenue (₦)</label>
+          <input type="number" name="revenue" placeholder="0 if free">
+        </div>
+        <div class="form-group">
+          <label>Topic</label>
+          <input type="text" name="topic" placeholder="Main topic or title">
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <textarea name="notes" placeholder="What worked? What to improve?"></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeModal('lecture-modal')">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="lecture-submit">Log lecture</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Content modal -->
+<div class="modal-backdrop" id="content-modal" onclick="if(event.target===this)closeModal('content-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Log content</span>
+      <button class="modal-close" onclick="closeModal('content-modal')">×</button>
+    </div>
+    <form id="content-form" onsubmit="event.preventDefault();submitContent()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" name="date">
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select name="type">
+            <option value="">Select type…</option>
+            <option>Lecture clip</option><option>Essay / newsletter</option>
+            <option>Thread</option><option>Caption / post</option>
+            <option>Video</option><option>Podcast</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Title / description</label>
+          <input type="text" name="title" placeholder="What was it about?">
+        </div>
+        <div class="form-group">
+          <label>Platform</label>
+          <select name="platform">
+            <option value="">Select platform…</option>
+            <option>Instagram</option><option>LinkedIn</option><option>Twitter/X</option>
+            <option>Substack</option><option>YouTube</option><option>TikTok</option>
+            <option>WhatsApp status</option><option>Multiple</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Lecture reference</label>
+          <input type="text" name="lecture_ref" placeholder="e.g. Lecture #3 — April">
+        </div>
+        <div class="form-group full">
+          <label>Status</label>
+          <select name="status">
+            <option>Published</option><option>Scheduled</option><option>Draft</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <textarea name="notes" placeholder="Any context, links, metrics…"></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeModal('content-modal')">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="content-submit">Log content</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Daily log modal -->
+<div class="modal-backdrop" id="daily-modal" onclick="if(event.target===this)closeModal('daily-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Score today</span>
+      <button class="modal-close" onclick="closeModal('daily-modal')">×</button>
+    </div>
+    <form id="daily-form" onsubmit="event.preventDefault();submitDaily()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" name="date">
+        </div>
+        <div class="form-group">
+          <label>Day</label>
+          <select name="day">
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Did you hit your daily win?</label>
+          <select name="win">
+            <option value="yes">Yes — I won today</option>
+            <option value="no">No — I missed it</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Score (1–5)</label>
+          <select name="score">
+            <option value="5">5 — Exceptional day</option>
+            <option value="4">4 — Strong day</option>
+            <option value="3">3 — Decent day</option>
+            <option value="2">2 — Struggled</option>
+            <option value="1">1 — Rough day</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Notes — what happened?</label>
+          <textarea name="notes" placeholder="What did you do? What worked? What will you do differently?"></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeModal('daily-modal')">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="daily-submit">Log day</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/core.js"></script>
+<script src="js/panels.js"></script>
+<script>
+  // Set today's date on all date inputs on open
+  document.querySelectorAll('input[type=date]').forEach(el => el.value = today());
+
+  // Auto-set day of week in daily form
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const todayDay = dayNames[new Date().getDay()];
+  const daySelect = document.querySelector('[name=day]');
+  if (daySelect) {
+    Array.from(daySelect.options).forEach(opt => { if (opt.value === todayDay) opt.selected = true; });
+  }
+
+  // Render weekly OS on load
+  renderWeeklyOS();
+</script>
+</body>
+</html>

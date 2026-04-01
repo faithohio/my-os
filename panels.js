@@ -95,7 +95,7 @@ function renderOutreachTable(rows) {
       <td>${channel || ''}</td>
       <td>${purpose || ''}</td>
       <td>${outcome ? `<span class="badge ${outcomeBadge(outcome)}">${outcome}</span>` : ''}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--text-muted)">${notes || ''}</td>
+      <td style="font-size:11px;color:var(--text-muted);white-space:normal;word-break:break-word;max-width:220px;line-height:1.5">${notes || ''}</td>
     </tr>`;
   }).join('');
 }

@@ -322,7 +322,7 @@ function renderLecturesTable(rows) {
       <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.1rem">${r.Attendees || r[2] || 0}</td>
       <td>${r.Referrals || r[3] || 0}</td>
       <td>${r.Revenue ? fmtMoney(r.Revenue || r[4]) : '—'}</td>
-      <td style="font-size:11px;color:var(--text-muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.Topic || r[5] || ''}</td>
+      <td style="font-size:11px;color:var(--text-muted);white-space:normal;word-break:break-word;max-width:220px;line-height:1.5">${r.Topic || r[5] || ''}</td>
     </tr>`;
   }).join('');
 }
@@ -473,7 +473,7 @@ function renderDailyTable(rows) {
       <td style="color:${dayColors[day] || 'var(--text)'}">${day || ''}</td>
       <td>${isWin ? '<span class="badge badge-green">Win ✓</span>' : '<span class="badge badge-coral">Miss</span>'}</td>
       <td style="color:var(--gold)">${r.Score || r[3] || '—'}/5</td>
-      <td style="font-size:12px;color:var(--text-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.Notes || r[4] || ''}</td>
+      <td style="font-size:11px;color:var(--text-muted);white-space:normal;word-break:break-word;max-width:220px;line-height:1.5">${r.Notes || r[4] || ''}</td>
     </tr>`;
   }).join('');
 }

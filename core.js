@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────
 
 // !! REPLACE THIS WITH YOUR APPS SCRIPT URL !!
-const SHEET_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw6U89h30Th4hnScFzGHytmxuu9fEf2d3jG9OHw6m1KDSe0IgvsD3U2Cs9d8QQfDgTqhg/exec';
 
 const INCOME_SOURCES = [
   { id: 'lecture', label: 'Monthly Lecture', color: '#c8a84b' },
